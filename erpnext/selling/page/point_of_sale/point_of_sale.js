@@ -132,18 +132,16 @@ erpnext.pos.PointOfSale = class PointOfSale {
 					me.frm.set_value('new_order_type', ot)
 
 					if (ot == __('Sample')) {
+						me.frm.set_value('additional_discount_percentage', 100);
 						me.frm.doc.items.forEach(cart_item => {
 							me.items.events.update_cart(cart_item.item_code, "discount_percentage", 100);
 						})
 					} else if (ot == __('Sales')) {
+						me.frm.set_value('additional_discount_percentage', 0);
 						me.frm.doc.items.forEach(cart_item => {
 							me.items.events.update_cart(cart_item.item_code, "discount_percentage", 0);
 						})
 					}
-
-					me.frm.set_value('grand_total', me.frm.doc.grand_total)
-					this.cart.update_grand_total()
-					this.cart.refresh_grand_rounded_total()
 				},
 				on_field_change: (item_code, field, value, batch_no) => {
 					this.update_item_in_cart(item_code, field, value, batch_no);
@@ -812,7 +810,6 @@ class POSCart {
 			format_currency(this.frm.doc.grand_total, this.frm.currency));
 		this.wrapper.find('.rounded-total-value').text(
 			format_currency(this.frm.doc.rounded_total, this.frm.currency));
-		this.refresh_grand_rounded_total()
 		this.$qty_total.find(".quantity-total").text(total_item_qty);
 
 		const customer = this.frm.doc.customer;
@@ -1125,7 +1122,6 @@ class POSCart {
 	}
 
 	get_item_html(item) {
-
 		const is_stock_item = this.get_item_details(item.item_code).is_stock_item;
 		const rate = format_currency(item.rate, this.frm.doc.currency);
 		const indicator_class = (!is_stock_item || item.actual_qty >= item.qty) ? 'green' : 'red';
@@ -1935,6 +1931,7 @@ class Payment {
 	update_payment_amount() {
 		var me = this;
 		$.each(this.frm.doc.payments, function(i, data) {
+			console.log("setting the ", data.mode_of_payment, " for the value", data.amount);
 			me.dialog.set_value(data.mode_of_payment, data.amount);
 		});
 	}
