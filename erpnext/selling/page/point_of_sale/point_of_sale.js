@@ -1,6 +1,6 @@
 /* global Clusterize */
 frappe.provide('erpnext.pos');
-var cart_items_list=[]
+
 frappe.pages['point-of-sale'].on_page_load = function(wrapper) {
 	frappe.ui.make_app_page({
 		parent: wrapper,
@@ -120,7 +120,7 @@ erpnext.pos.PointOfSale = class PointOfSale {
 	}
 
 	make_cart() {
-		const me=this;
+		const me = this;
 		this.cart = new POSCart({
 			frm: this.frm,
 			wrapper: this.wrapper.find('.cart-container'),
@@ -128,50 +128,22 @@ erpnext.pos.PointOfSale = class PointOfSale {
 				on_customer_change: (customer) => {
 					this.frm.set_value('customer', customer);
 				},
-				on_order_type_change:(ot)=>{
-					// -----------------------------------------------------------------------------------------event
-					console.log(this.frm.doc.grand_total+"u--------");
+				on_order_type_change:(ot) => {
+					me.frm.set_value('new_order_type', ot)
 
-					console.log(this.frm.doc.grand_total+"m--------");
-
-					me.frm.set_value('new_order_type',ot)
-					
-					console.log({ot});
 					if (ot == __('Sample')) {
-					// -----------------------------------------------------------------------------------------sample
-						//  frappe.model.set_value(me.frm.doctype, me.frm.docname,
-						// 	 'additional_discount_percentage', 100)
-							 me.frm.set_value( 'additional_discount_percentage', 100)
-							//  this.cart.update_grand_total();
-							// this.cart.refresh_grand_rounded_total();
-							 console.log(cur_frm.doc.additional_discount_percentage,"hello");
-							 
-						cart_items_list.forEach(cart_item=>{ me.cart.update_item(cart_item) 
+						me.frm.doc.items.forEach(cart_item => {
+							me.items.events.update_cart(cart_item.item_code, "discount_percentage", 100);
 						})
-						}
-					else if (ot == __('Sales')) {
-					// -------------------------------------------------------------------------------------------sales
-						// frappe.model.set_value(me.frm.doctype, me.frm.docname,
-						// 	'additional_discount_percentage', 0)
-							me.frm.set_value( 'additional_discount_percentage', 0)
-							// this.cart.update_grand_total()
-							cart_items_list.forEach(cart_item=>{ me.cart.update_item(cart_item)
+					} else if (ot == __('Sales')) {
+						me.frm.doc.items.forEach(cart_item => {
+							me.items.events.update_cart(cart_item.item_code, "discount_percentage", 0);
 						})
 					}
-					console.log(this.frm.doc.grand_total,"GT1");
-					console.log(me.frm.doc.grand_total,"GT1");
-					console.log(cur_frm.doc.grand_total,"GT1");
 
-					me.frm.set_value('grand_total',me.frm.doc.grand_total)
+					me.frm.set_value('grand_total', me.frm.doc.grand_total)
 					this.cart.update_grand_total()
 					this.cart.refresh_grand_rounded_total()
-					console.log(me.frm.doc.grand_total,"GT2");
-					console.log(this.frm.doc.grand_total,"GT2");
-					console.log(cur_frm.doc.grand_total,"GT2");
-
-					console.log(this.frm.doc.grand_total+"d--------");
-					
-
 				},
 				on_field_change: (item_code, field, value, batch_no) => {
 					this.update_item_in_cart(item_code, field, value, batch_no);
@@ -332,7 +304,7 @@ erpnext.pos.PointOfSale = class PointOfSale {
 		if (in_list(['serial_no', 'batch_no'], field)) {
 			args[field] = value;
 		}
-		
+
 		// add to cur_frm
 		const item = this.frm.add_child('items', args);
 		frappe.flags.hide_serial_batch_dialog = true;
@@ -807,8 +779,6 @@ class POSCart {
 
 
 		this.$cart_items = this.wrapper.find('.cart-items');
-		console.log(this.$cart_items);
-		
 		this.$empty_state = this.wrapper.find('.cart-items .empty-state');
 		this.$taxes_and_totals = this.wrapper.find('.taxes-and-totals');
 		this.$discount_amount = this.wrapper.find('.discount-amount');
@@ -838,6 +808,10 @@ class POSCart {
 		this.frm.set_value("pos_total_qty",total_item_qty);
 
 		this.$discount_amount.find('input:text').val('');
+		this.wrapper.find('.grand-total-value').text(
+			format_currency(this.frm.doc.grand_total, this.frm.currency));
+		this.wrapper.find('.rounded-total-value').text(
+			format_currency(this.frm.doc.rounded_total, this.frm.currency));
 		this.refresh_grand_rounded_total()
 		this.$qty_total.find(".quantity-total").text(total_item_qty);
 
@@ -855,14 +829,7 @@ class POSCart {
 			this.numpad.enable_buttons(enable_btns);
 		}
 	}
-	refresh_grand_rounded_total()
-	{
-		this.wrapper.find('.grand-total-value').text(
-			format_currency(this.frm.doc.grand_total, this.frm.currency));
-		this.wrapper.find('.rounded-total-value').text(
-			format_currency(this.frm.doc.rounded_total, this.frm.currency));
 
-	}
 	get_grand_total() {
 		let total = this.get_total_template('Grand Total', 'grand-total-value');
 
@@ -956,20 +923,13 @@ class POSCart {
 	}
 
 	update_grand_total() {
-		// debugger;
 		this.$grand_total.find('.grand-total-value').text(
 			format_currency(this.frm.doc.grand_total, this.frm.currency)
-			
-			
 		);
 
 		this.$grand_total.find('.rounded-total-value').text(
 			format_currency(this.frm.doc.rounded_total, this.frm.currency)
 		);
-		console.log(this.$grand_total,"here");
-		console.log(this.frm.doc.rounded_total);
-		
-
 	}
 
 	update_qty_total() {
@@ -1138,18 +1098,14 @@ class POSCart {
 			// add to cart
 			const $item = $(this.get_item_html(item));
 			$item.appendTo(this.$cart_items);
-			cart_items_list.push(item)
-			this.update_item(item);
 		}
 		this.highlight_item(item.item_code);
 	}
+
 	update_item(item) {
-		
-		console.log("-----------------"+this.frm.doc.additional_discount_percentage+" "+item.discount_percentage);
-			item.discount_percentage=this.frm.doc.additional_discount_percentage
-			console.log(item.discount_percentage+"====");
-		const item_selector = item.batch_no ?
-			`[data-batch-no="${item.batch_no}"]` : `[data-item-code="${escape(item.item_code)}"]`;
+		const item_selector = item.batch_no
+			? `[data-batch-no="${item.batch_no}"]`
+			: `[data-item-code="${escape(item.item_code)}"]`;
 
 		const $item = this.$cart_items.find(item_selector);
 
@@ -1166,7 +1122,6 @@ class POSCart {
 		} else {
 			$item.remove();
 		}
-		
 	}
 
 	get_item_html(item) {
@@ -1276,8 +1231,6 @@ class POSCart {
 			const discount_percentage = flt(e.target.value,
 				precision("additional_discount_percentage"));
 
-				console.log({discount_percentage});
-				
 			frappe.model.set_value(this.frm.doctype, this.frm.docname,
 				'additional_discount_percentage', discount_percentage)
 				.then(() => {
@@ -1289,11 +1242,9 @@ class POSCart {
 		});
 
 		this.wrapper.find('.discount_amount').on('change', (e) => {
-			
 			const discount_amount = flt(e.target.value, precision('discount_amount'));
 			frappe.model.set_value(this.frm.doctype, this.frm.docname,
 				'discount_amount', discount_amount);
-				console.log({discount_amount});
 			this.frm.trigger('discount_amount')
 				.then(() => {
 					this.update_discount_fields();
@@ -1984,7 +1935,6 @@ class Payment {
 	update_payment_amount() {
 		var me = this;
 		$.each(this.frm.doc.payments, function(i, data) {
-			console.log("setting the ", data.mode_of_payment, " for the value", data.amount);
 			me.dialog.set_value(data.mode_of_payment, data.amount);
 		});
 	}
