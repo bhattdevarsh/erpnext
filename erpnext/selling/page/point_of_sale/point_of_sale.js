@@ -129,36 +129,46 @@ erpnext.pos.PointOfSale = class PointOfSale {
 					this.frm.set_value('customer', customer);
 				},
 				on_order_type_change:(ot)=>{
+					// -----------------------------------------------------------------------------------------event
 					console.log(this.frm.doc.grand_total+"u--------");
 
 					console.log(this.frm.doc.grand_total+"m--------");
 
-					var itemcode=me.items
-					console.log(itemcode.items[0].item_code);
 					me.frm.set_value('new_order_type',ot)
 					
 					console.log({ot});
 					if (ot == __('Sample')) {
-						 frappe.model.set_value(me.frm.doctype, me.frm.docname,
-							 'additional_discount_percentage', 100)
+					// -----------------------------------------------------------------------------------------sample
+						//  frappe.model.set_value(me.frm.doctype, me.frm.docname,
+						// 	 'additional_discount_percentage', 100)
 							 me.frm.set_value( 'additional_discount_percentage', 100)
+							//  this.cart.update_grand_total();
+							// this.cart.refresh_grand_rounded_total();
 							 console.log(cur_frm.doc.additional_discount_percentage,"hello");
 							 
 						cart_items_list.forEach(cart_item=>{ me.cart.update_item(cart_item) 
 						})
 						}
 					else if (ot == __('Sales')) {
-						frappe.model.set_value(me.frm.doctype, me.frm.docname,
-							'additional_discount_percentage', 0)
+					// -------------------------------------------------------------------------------------------sales
+						// frappe.model.set_value(me.frm.doctype, me.frm.docname,
+						// 	'additional_discount_percentage', 0)
 							me.frm.set_value( 'additional_discount_percentage', 0)
+							// this.cart.update_grand_total()
 							cart_items_list.forEach(cart_item=>{ me.cart.update_item(cart_item)
 						})
 					}
+					console.log(this.frm.doc.grand_total,"GT1");
 					console.log(me.frm.doc.grand_total,"GT1");
+					console.log(cur_frm.doc.grand_total,"GT1");
+
 					me.frm.set_value('grand_total',me.frm.doc.grand_total)
 					this.cart.update_grand_total()
 					this.cart.refresh_grand_rounded_total()
 					console.log(me.frm.doc.grand_total,"GT2");
+					console.log(this.frm.doc.grand_total,"GT2");
+					console.log(cur_frm.doc.grand_total,"GT2");
+
 					console.log(this.frm.doc.grand_total+"d--------");
 					
 
@@ -949,11 +959,17 @@ class POSCart {
 		// debugger;
 		this.$grand_total.find('.grand-total-value').text(
 			format_currency(this.frm.doc.grand_total, this.frm.currency)
+			
+			
 		);
 
 		this.$grand_total.find('.rounded-total-value').text(
 			format_currency(this.frm.doc.rounded_total, this.frm.currency)
 		);
+		console.log(this.$grand_total,"here");
+		console.log(this.frm.doc.rounded_total);
+		
+
 	}
 
 	update_qty_total() {
@@ -1129,10 +1145,9 @@ class POSCart {
 	}
 	update_item(item) {
 		
-		// console.log(this.arr_cart_items);
-		// console.log("-----------------"+this.frm.doc.additional_discount_percentage+" "+item.discount_percentage);
-		// 	item.discount_percentage=this.frm.doc.additional_discount_percentage
-		// 	console.log(item.discount_percentage+"====");
+		console.log("-----------------"+this.frm.doc.additional_discount_percentage+" "+item.discount_percentage);
+			item.discount_percentage=this.frm.doc.additional_discount_percentage
+			console.log(item.discount_percentage+"====");
 		const item_selector = item.batch_no ?
 			`[data-batch-no="${item.batch_no}"]` : `[data-item-code="${escape(item.item_code)}"]`;
 
@@ -1261,6 +1276,8 @@ class POSCart {
 			const discount_percentage = flt(e.target.value,
 				precision("additional_discount_percentage"));
 
+				console.log({discount_percentage});
+				
 			frappe.model.set_value(this.frm.doctype, this.frm.docname,
 				'additional_discount_percentage', discount_percentage)
 				.then(() => {
@@ -1272,9 +1289,11 @@ class POSCart {
 		});
 
 		this.wrapper.find('.discount_amount').on('change', (e) => {
+			
 			const discount_amount = flt(e.target.value, precision('discount_amount'));
 			frappe.model.set_value(this.frm.doctype, this.frm.docname,
 				'discount_amount', discount_amount);
+				console.log({discount_amount});
 			this.frm.trigger('discount_amount')
 				.then(() => {
 					this.update_discount_fields();
