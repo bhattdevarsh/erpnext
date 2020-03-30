@@ -75,23 +75,26 @@ def get_items(start, page_length, price_list, item_group, search_value="", pos_p
 			if warehouse:
 				filters['warehouse'] = warehouse
 
-			bin_data = frappe._dict(
-				frappe.get_all("Bin", fields = ["item_code", "sum(actual_qty) as actual_qty"],
-				filters = filters, group_by = "item_code")
-			)
-
+			bin_data = frappe.get_all("Bin", fields = ["item_code", "sum(actual_qty) as actual_qty"],
+			filters = filters, group_by = "item_code")
+			# next line stores item_code as key and actual_qty as value pair for all items
+			bin_item={bin_item.item_code: bin_item.actual_qty for bin_item in bin_data}
+			
 		for item in items_data:
 			row = {}
-
-			row.update(item)
-			item_price = item_prices.get(item.item_code) or {}
-			row.update({
-				'price_list_rate': item_price.get('price_list_rate'),
-				'currency': item_price.get('currency'),
-				'actual_qty': bin_data.get('actual_qty')
-			})
-
-			result.append(row)
+			# next line fetches the value(actual_qty) using asked item_code as key
+			actual_qty= bin_item.get(item.item_code)
+			if display_items_in_stock and actual_qty: #checks for display_items_in_stock set to 1 and actual_qty eixists
+				row.update(item)
+				item_price = item_prices.get(item.item_code) or {}
+				row.update({
+					'price_list_rate': item_price.get('price_list_rate'),
+					'currency': item_price.get('currency'),
+					'actual_qty': actual_qty
+				})
+				result.append(row)
+			# REDUCE IN LENGTH OF TOTAL NUMBER OF ITEM DISPLAY (PREVIOUS LENGTH WAS 40)
+			# REQUIRES ELSE PART IN CASE OF display_items_in_stock IS SET TO 0
 
 	res = {
 		'items': result
