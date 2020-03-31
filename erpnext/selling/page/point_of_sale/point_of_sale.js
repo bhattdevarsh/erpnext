@@ -131,12 +131,12 @@ erpnext.pos.PointOfSale = class PointOfSale {
 				on_order_type_change:(order_type) => {
 					me.frm.set_value('new_order_type', order_type)
 
-					if (order_type == __('Sample')) {
+					if (order_type == 'Sample') {
 						me.frm.set_value('additional_discount_percentage', 100);
 						me.frm.doc.items.forEach(cart_item => {
 							me.items.events.update_cart(cart_item.item_code, "discount_percentage", 100);
 						})
-					} else if (order_type == __('Sales')) {
+					} else if (order_type == 'Sales') {
 						me.frm.set_value('additional_discount_percentage', 0);
 						me.frm.doc.items.forEach(cart_item => {
 							me.items.events.update_cart(cart_item.item_code, "discount_percentage", 0);
@@ -731,7 +731,7 @@ class POSCart {
 		this.make_customer_field();
 		this.make_loyalty_points();
 		this.make_numpad();
-		this.make_order_type_options();
+		this.make_order_type_field();
 	}
 
 	make_dom() {
@@ -939,7 +939,7 @@ class POSCart {
 		this.$qty_total.find('.quantity-total').text(total_item_qty);
 		this.frm.set_value("pos_total_qty",total_item_qty);
 	}
-	make_order_type_options(){
+	make_order_type_field(){
 		this.order_type_field = frappe.ui.form.make_control({
 			df: {
 				fieldtype: 'Select',
@@ -947,7 +947,7 @@ class POSCart {
 				fieldname: 'new_order_type',
 				options: this.frm.get_field("new_order_type").df.options,
 				reqd: 1,
-				default : this.frm.get_field("new_order_type").df.options[0],
+				default : this.frm.doc.new_order_type,
 				onchange: () => {
 					this.events.on_order_type_change(this.order_type_field.get_value());
 					this.events.get_loyalty_details();
@@ -956,7 +956,6 @@ class POSCart {
 			parent: this.wrapper.find('.customer-field'),
 			render_input: true
 		});
-		this.order_type_field.set_value(this.frm.doc.new_order_type);
 	}
 	make_customer_field() {
 		this.customer_field = frappe.ui.form.make_control({
