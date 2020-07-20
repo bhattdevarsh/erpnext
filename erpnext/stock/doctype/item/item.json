@@ -1040,10 +1040,10 @@
    "label": "Auto Create Assets on Purchase"
   },
   {
-   "fieldname": "strain_type",
-   "fieldtype": "Text",
-   "label": "Strain Type"
-  }
+    "fieldname": "strain_type",
+    "fieldtype": "Text",
+    "label": "Strain Type"
+   }
  ],
  "has_web_view": 1,
  "icon": "fa fa-tag",
@@ -1051,7 +1051,7 @@
  "image_field": "image",
  "links": [],
  "max_attachments": 1,
- "modified": "2020-07-20 04:25:42.022292",
+ "modified": "2020-07-20 04:52:47.311330",
  "modified_by": "Administrator",
  "module": "Stock",
  "name": "Item",
