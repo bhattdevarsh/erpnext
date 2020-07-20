@@ -19,6 +19,7 @@
   "item_group",
   "is_item_from_hub",
   "stock_uom",
+  "strain_type",
   "column_break0",
   "disabled",
   "allow_alternative_item",
@@ -1037,6 +1038,11 @@
    "fieldname": "auto_create_assets",
    "fieldtype": "Check",
    "label": "Auto Create Assets on Purchase"
+  },
+  {
+   "fieldname": "strain_type",
+   "fieldtype": "Text",
+   "label": "Strain Type"
   }
  ],
  "has_web_view": 1,
@@ -1045,7 +1051,7 @@
  "image_field": "image",
  "links": [],
  "max_attachments": 1,
- "modified": "2020-01-02 19:13:59.295963",
+ "modified": "2020-07-20 04:25:42.022292",
  "modified_by": "Administrator",
  "module": "Stock",
  "name": "Item",
