@@ -24,8 +24,10 @@
   "status",
   "section_break_14",
   "inspected_by",
-  "verified_by",
   "bom_no",
+  "thc",
+  "cbd",
+  "verified_by",
   "sign_off",
   "column_break_17",
   "remarks",
@@ -296,7 +298,7 @@
   {
    "fieldname": "sign_off",
    "fieldtype": "Signature",
-   "label": "Sign Off"
+   "label": "Verifier\u2019s signature"
   },
   {
    "fieldname": "secation_break_purchase_details",
@@ -316,13 +318,25 @@
    "fieldname": "uom",
    "fieldtype": "Data",
    "label": "UOM"
+  },
+  {
+   "fieldname": "thc",
+   "fieldtype": "Float",
+   "hidden": 1,
+   "label": "THC%"
+  },
+  {
+   "fieldname": "cbd",
+   "fieldtype": "Float",
+   "hidden": 1,
+   "label": "CBD%"
   }
  ],
  "icon": "fa fa-search",
  "idx": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2020-07-22 02:34:10.371601",
+ "modified": "2020-07-22 07:44:15.270900",
  "modified_by": "Administrator",
  "module": "Stock",
  "name": "Quality Inspection",
