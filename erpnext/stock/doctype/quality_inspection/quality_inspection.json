@@ -323,20 +323,20 @@
    "fieldname": "thc",
    "fieldtype": "Float",
    "hidden": 1,
-   "label": "THC%"
+   "label": "THC %"
   },
   {
    "fieldname": "cbd",
    "fieldtype": "Float",
    "hidden": 1,
-   "label": "CBD%"
+   "label": "CBD %"
   }
  ],
  "icon": "fa fa-search",
  "idx": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2020-07-22 07:44:15.270900",
+ "modified": "2020-07-24 01:44:00.247450",
  "modified_by": "Administrator",
  "module": "Stock",
  "name": "Quality Inspection",

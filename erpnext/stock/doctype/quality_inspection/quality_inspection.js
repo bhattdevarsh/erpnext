@@ -6,17 +6,7 @@ cur_frm.cscript.refresh = cur_frm.cscript.inspection_type;
 frappe.ui.form.on("Quality Inspection", {
 	item_code: function(frm) {
 		if (frm.doc.item_code) {
-			frappe.call({
-				method: "erpnext.stock.doctype.quality_inspection.quality_inspection.check_is_compliance_item",
-				args: {
-					"item_code":frm.doc.item_code
-				},
-				callback: function (readable) {
-					frm.set_df_property('batch_no','reqd',readable.message);
-					frm.toggle_display('thc', readable.message);
-					frm.toggle_display('cbd', readable.message);
-				}
-			})
+			frm.trigger("check_compliance_item");
 			return frm.call({
 				method: "get_quality_inspection_template",
 				doc: frm.doc,
@@ -39,27 +29,35 @@ frappe.ui.form.on("Quality Inspection", {
 		}
 	},
 	on_submit: function(frm) {
+		if (frm.doc.thc || frm.doc.cbd){
+			frappe.call({
+				method: "erpnext.stock.doctype.batch.batch.save_thc_cbd",
+				args: {
+					"batch_no":frm.doc.batch_no,
+					"thc":frm.doc.thc,
+					"cbd":frm.doc.cbd
+				},
+			})
+		}
+	  },
+	  onload: (frm)=>{
+		if (frm.doc.item_code){
+			frm.trigger("check_compliance_item");
+		}
+	  },
+	  check_compliance_item: function(frm){
 		frappe.call({
 			method: "erpnext.stock.doctype.quality_inspection.quality_inspection.check_is_compliance_item",
 			args: {
 				"item_code":frm.doc.item_code
 			},
 			callback: function (readable) {
-				if(readable)
-				{
-					frappe.call({
-						method: "erpnext.stock.doctype.batch.batch.save_thc_cbd",
-						args: {
-							"batch_no":frm.doc.batch_no,
-							"thc":frm.doc.thc,
-							"cbd":frm.doc.cbd
-						},
-					})
-				}
-				
+				frm.toggle_reqd('batch_no',readable.message);
+				frm.toggle_display('thc', readable.message);
+				frm.toggle_display('cbd', readable.message);
 			}
 		})
-	  }
+	}
 })
 
 // item code based on GRN/DN
@@ -100,4 +98,3 @@ cur_frm.set_query("batch_no", function(doc) {
 
 cur_frm.add_fetch('item_code', 'item_name', 'item_name');
 cur_frm.add_fetch('item_code', 'description', 'description');
-

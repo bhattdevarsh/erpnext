@@ -178,13 +178,13 @@
   {
    "fieldname": "thc",
    "fieldtype": "Float",
-   "label": "THC%",
+   "label": "THC %",
    "read_only": 1
   },
   {
    "fieldname": "cbd",
    "fieldtype": "Float",
-   "label": "CBD%",
+   "label": "CBD %",
    "read_only": 1
   }
  ],
@@ -193,7 +193,7 @@
  "image_field": "image",
  "links": [],
  "max_attachments": 5,
- "modified": "2020-07-23 04:40:14.226238",
+ "modified": "2020-07-23 22:52:42.074982",
  "modified_by": "Administrator",
  "module": "Stock",
  "name": "Batch",
