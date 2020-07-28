@@ -40,8 +40,8 @@ frappe.ui.form.on("Quality Inspection", {
 			})
 		}
 	  },
-	  onload: (frm)=>{
-		if (frm.doc.item_code){
+	  onload: (frm) => {
+		if (frm.doc.item_code) {
 			frm.trigger("check_compliance_item");
 		}
 	  },
