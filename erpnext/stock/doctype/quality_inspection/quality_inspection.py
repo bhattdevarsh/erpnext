@@ -127,8 +127,4 @@ def make_quality_inspection(source_name, target_doc=None):
 
 @frappe.whitelist()
 def check_is_compliance_item(item_code):
-	count=frappe.db.count('Compliance Item',item_code)
-	if count > 0:
-		return True
-	else:
-		return False
+	return bool(frappe.db.exists("Compliance Item", {"item_code": item_code}))
