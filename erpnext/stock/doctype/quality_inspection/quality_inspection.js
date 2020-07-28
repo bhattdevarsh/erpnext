@@ -39,13 +39,13 @@ frappe.ui.form.on("Quality Inspection", {
 				},
 			})
 		}
-	  },
-	  onload: (frm) => {
+	},
+	onload: (frm) => {
 		if (frm.doc.item_code) {
 			frm.trigger("check_compliance_item");
 		}
-	  },
-	  check_compliance_item: function(frm){
+	},
+	check_compliance_item: function(frm){
 		frappe.call({
 			method: "erpnext.stock.doctype.quality_inspection.quality_inspection.check_is_compliance_item",
 			args: {

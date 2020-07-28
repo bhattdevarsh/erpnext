@@ -40,7 +40,7 @@
   "column_break_strain_test",
   "testing_lab",
   "testing_result_link",
-  "test_date",
+  "testing_date",
   "section_break_manufacture_information",
   "manufacturer_name",
   "column_break_manufacture_information",
@@ -271,11 +271,6 @@
    "label": "Testing Result Link"
   },
   {
-   "fieldname": "test_date",
-   "fieldtype": "Date",
-   "label": "Test Date"
-  },
-  {
    "fieldname": "section_break_manufacture_information",
    "fieldtype": "Section Break",
    "label": "Manufacture Information"
@@ -306,18 +301,22 @@
    "label": "Purchase Details"
   },
   {
+   "depends_on": "eval:in_list([\"Purchase Receipt\", \"Purchase Invoice\"], doc.reference_type)",
    "fieldname": "qty",
    "fieldtype": "Data",
-   "label": "Accepted Quantity"
+   "label": "Accepted Quantity",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_purchase_details",
    "fieldtype": "Column Break"
   },
   {
+   "depends_on": "eval:in_list([\"Purchase Receipt\", \"Purchase Invoice\"], doc.reference_type)",
    "fieldname": "uom",
    "fieldtype": "Data",
-   "label": "UOM"
+   "label": "UOM",
+   "read_only": 1
   },
   {
    "fieldname": "thc",
@@ -330,13 +329,18 @@
    "fieldtype": "Float",
    "hidden": 1,
    "label": "CBD %"
+  },
+  {
+   "fieldname": "testing_date",
+   "fieldtype": "Date",
+   "label": "Testing Date"
   }
  ],
  "icon": "fa fa-search",
  "idx": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2020-07-24 01:44:00.247450",
+ "modified": "2020-07-28 07:08:01.856324",
  "modified_by": "Administrator",
  "module": "Stock",
  "name": "Quality Inspection",
