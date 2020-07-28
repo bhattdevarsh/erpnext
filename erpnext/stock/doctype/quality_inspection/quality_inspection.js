@@ -52,7 +52,7 @@ frappe.ui.form.on("Quality Inspection", {
 				"item_code":frm.doc.item_code
 			},
 			callback: function (readable) {
-				frm.toggle_reqd('batch_no',readable.message);
+				frm.toggle_reqd('batch_no', readable.message);
 				frm.toggle_display('thc', readable.message);
 				frm.toggle_display('cbd', readable.message);
 			}
