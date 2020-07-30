@@ -126,7 +126,7 @@ def make_quality_inspection(source_name, target_doc=None):
 	return doc
 
 @frappe.whitelist()
-def get_data_purchase_document(doctype,doc_name,item_code):
+def get_purchase_item_details(doctype, name, item_code):
 	data = {}
 	doc = frappe.get_doc(doctype, doc_name)
 	data["supplier"] = doc.supplier
