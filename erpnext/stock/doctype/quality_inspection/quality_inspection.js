@@ -35,6 +35,11 @@ frappe.ui.form.on("Quality Inspection", {
 			}
 
 			frm.trigger("check_compliance_item");
+			frappe.db.get_value('Item', {name: frm.doc.item_code}, ['has_batch_no','has_serial_no'], (r) => {
+				frm.toggle_reqd("batch_no", r.has_batch_no);
+				frm.toggle_reqd("item_serial_no", r.has_serial_no);
+			});
+
 			return frm.call({
 				method: "get_quality_inspection_template",
 				doc: frm.doc,
