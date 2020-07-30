@@ -6,7 +6,7 @@ cur_frm.cscript.refresh = cur_frm.cscript.inspection_type;
 frappe.ui.form.on("Quality Inspection", {
 	item_code: function(frm) {
 		if (frm.doc.item_code) {
-			if (frm.doc.reference_type == "Purchase Invoice" || frm.doc.reference_type == "Purchase Receipt") {
+			if (["Purchase Invoice", "Purchase Receipt"].includes(frm.doc.reference_type)) {
 				frappe.call({
 					method: "erpnext.stock.doctype.quality_inspection.quality_inspection.get_data_purchase_document",
 					args: {
