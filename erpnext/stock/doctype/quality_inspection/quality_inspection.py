@@ -128,3 +128,20 @@ def make_quality_inspection(source_name, target_doc=None):
 @frappe.whitelist()
 def check_is_compliance_item(item_code):
 	return bool(frappe.db.exists("Compliance Item", {"item_code": item_code}))
+
+@frappe.whitelist()
+def get_data_purchase_document(doctype,doc_name,item_code):
+	data = {}
+	doc = frappe.get_doc(doctype, doc_name)
+	data["supplier"] = doc.supplier
+	for item in doc.items:	
+		if item.item_code == item_code:
+			data["uom"] = item.uom
+			data["qty"] = item.qty
+			return data
+
+@frappe.whitelist()
+def get_supplier_details(supplier):
+	website = frappe.db.get_value("Supplier", supplier, "website")
+	if website:
+		return website

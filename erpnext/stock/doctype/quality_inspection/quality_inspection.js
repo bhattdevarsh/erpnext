@@ -6,6 +6,34 @@ cur_frm.cscript.refresh = cur_frm.cscript.inspection_type;
 frappe.ui.form.on("Quality Inspection", {
 	item_code: function(frm) {
 		if (frm.doc.item_code) {
+			if (frm.doc.reference_type == "Purchase Invoice" || frm.doc.reference_type == "Purchase Receipt") {
+				frappe.call({
+					method: "erpnext.stock.doctype.quality_inspection.quality_inspection.get_data_purchase_document",
+					args: {
+						"doctype": frm.doc.reference_type,
+						"doc_name": frm.doc.reference_name,
+						"item_code": frm.doc.item_code
+					},
+					callback: function (data) {
+						cur_frm.set_value("uom", data.message.uom);
+						cur_frm.set_value("qty", data.message.qty);
+						cur_frm.set_value("manufacturer_name", data.message.supplier)
+
+						frappe.call({
+							method: "erpnext.stock.doctype.quality_inspection.quality_inspection.get_supplier_details",
+							args: {
+								"supplier": data.message.supplier
+							},
+							callback: function (data) {
+								if (data) {
+									cur_frm.set_value("manufacturer_website", data.message);
+								}
+							}
+						})
+					}
+				})
+			}
+
 			frm.trigger("check_compliance_item");
 			return frm.call({
 				method: "get_quality_inspection_template",
@@ -14,6 +42,15 @@ frappe.ui.form.on("Quality Inspection", {
 					refresh_field(['quality_inspection_template', 'readings']);
 				}
 			});
+
+		}
+	},
+	reference_type: function (frm) {
+		if (frm.doc.reference_type == "Purchase Invoice" || frm.doc.reference_type == "Purchase Receipt") {
+			frm.toggle_reqd('reference_name', true);
+		}
+		else {
+			frm.toggle_reqd('reference_name', false);
 		}
 	},
 

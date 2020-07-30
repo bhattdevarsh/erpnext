@@ -279,7 +279,8 @@
    "fieldname": "manufacturer_name",
    "fieldtype": "Link",
    "label": "Manufacturer Name",
-   "options": "Supplier"
+   "options": "Supplier",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_manufacture_information",
@@ -288,7 +289,8 @@
   {
    "fieldname": "manufacturer_website",
    "fieldtype": "Data",
-   "label": "Manufacturer Website"
+   "label": "Manufacturer Website",
+   "read_only": 1
   },
   {
    "fieldname": "sign_off",
@@ -301,7 +303,6 @@
    "label": "Purchase Details"
   },
   {
-   "depends_on": "eval:in_list([\"Purchase Receipt\", \"Purchase Invoice\"], doc.reference_type)",
    "fieldname": "qty",
    "fieldtype": "Data",
    "label": "Accepted Quantity",
@@ -312,7 +313,6 @@
    "fieldtype": "Column Break"
   },
   {
-   "depends_on": "eval:in_list([\"Purchase Receipt\", \"Purchase Invoice\"], doc.reference_type)",
    "fieldname": "uom",
    "fieldtype": "Data",
    "label": "UOM",
@@ -340,7 +340,7 @@
  "idx": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2020-07-28 07:08:01.856324",
+ "modified": "2020-07-29 04:18:55.551330",
  "modified_by": "Administrator",
  "module": "Stock",
  "name": "Quality Inspection",
