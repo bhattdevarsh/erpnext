@@ -127,13 +127,14 @@ def make_quality_inspection(source_name, target_doc=None):
 
 @frappe.whitelist()
 def get_purchase_item_details(doctype, name, item_code):
-	data = {}
-	doc = frappe.get_doc(doctype, doc_name)
-	data["supplier"] = doc.supplier
+	doc = frappe.get_doc(doctype, name)
 	for item in doc.items:	
 		if item.item_code == item_code:
-			data["uom"] = item.uom
-			data["qty"] = item.qty
+			data = {
+				"supplier": doc.supplier,
+				"uom": item.uom,
+				"qty": item.qty
+			}
 			return data
 
 @frappe.whitelist()
