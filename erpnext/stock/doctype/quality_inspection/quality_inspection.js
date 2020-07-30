@@ -70,14 +70,14 @@ frappe.ui.form.on("Quality Inspection", {
 			});
 		}
 	},
-	on_submit: function(frm) {
-		if (frm.doc.thc || frm.doc.cbd){
+	on_submit: function (frm) {
+		if (frm.doc.thc || frm.doc.cbd) {
 			frappe.call({
 				method: "erpnext.stock.doctype.batch.batch.save_thc_cbd",
 				args: {
-					"batch_no":frm.doc.batch_no,
-					"thc":frm.doc.thc,
-					"cbd":frm.doc.cbd
+					"batch_no": frm.doc.batch_no,
+					"thc": frm.doc.thc,
+					"cbd": frm.doc.cbd
 				},
 			})
 		}
@@ -87,18 +87,20 @@ frappe.ui.form.on("Quality Inspection", {
 			frm.trigger("check_compliance_item");
 		}
 	},
-	check_compliance_item: function(frm){
-		frappe.call({
-			method: "erpnext.stock.doctype.quality_inspection.quality_inspection.check_is_compliance_item",
-			args: {
-				"item_code":frm.doc.item_code
-			},
-			callback: function (readable) {
-				frm.toggle_reqd('batch_no', readable.message);
-				frm.toggle_display('thc', readable.message);
-				frm.toggle_display('cbd', readable.message);
-			}
-		})
+	check_compliance_item: function (frm) {
+		frappe.db.get_value("Compliance Item", { "item_code": frm.doc.item_code }, "item_code")
+			.then(item => {
+				if (item.message) {
+					frm.toggle_reqd('batch_no', true);
+					frm.toggle_display('thc', true);
+					frm.toggle_display('cbd', true);
+				}
+				else {
+					frm.toggle_reqd('batch_no', false);
+					frm.toggle_display('thc', false);
+					frm.toggle_display('cbd', false);
+				}
+			})
 	}
 })
 
