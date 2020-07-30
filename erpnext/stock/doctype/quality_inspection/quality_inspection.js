@@ -19,17 +19,12 @@ frappe.ui.form.on("Quality Inspection", {
 						cur_frm.set_value("qty", data.message.qty);
 						cur_frm.set_value("manufacturer_name", data.message.supplier)
 
-						frappe.call({
-							method: "erpnext.stock.doctype.quality_inspection.quality_inspection.get_supplier_details",
-							args: {
-								"supplier": data.message.supplier
-							},
-							callback: function (data) {
-								if (data) {
-									cur_frm.set_value("manufacturer_website", data.message);
+						frappe.db.get_value("Supplier", { "name": data.message.supplier }, "website")
+							.then(supplier => {
+								if (supplier && supplier.message) {
+									frm.set_value("manufacturer_website", supplier.message.website);
 								}
 							}
-						})
 					}
 				})
 			}
