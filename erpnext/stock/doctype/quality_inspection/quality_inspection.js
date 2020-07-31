@@ -18,8 +18,8 @@ frappe.ui.form.on("Quality Inspection", {
 						callback: function (data) {
 							frm.set_value("uom", data.message.uom);
 							frm.set_value("qty", data.message.qty);
-							frm.set_value("manufacturer_name", data.message.supplier)
-							frm.refresh()
+							frm.set_value("manufacturer_name", data.message.supplier);
+							frm.refresh();
 
 							frappe.db.get_value("Supplier", { "supplier_name": data.message.supplier }, "website")
 								.then(supplier => {
