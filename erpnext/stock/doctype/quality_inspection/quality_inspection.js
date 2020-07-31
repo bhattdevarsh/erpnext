@@ -19,11 +19,13 @@ frappe.ui.form.on("Quality Inspection", {
 							frm.set_value("uom", data.message.uom);
 							frm.set_value("qty", data.message.qty);
 							frm.set_value("manufacturer_name", data.message.supplier)
+							frm.refresh()
 
 							frappe.db.get_value("Supplier", { "supplier_name": data.message.supplier }, "website")
 								.then(supplier => {
 									if (supplier.message) {
 										frm.set_value("manufacturer_website", supplier.message.website);
+										frm.refresh()
 									}
 								})
 						}
