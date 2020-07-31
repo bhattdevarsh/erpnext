@@ -137,8 +137,3 @@ def get_purchase_item_details(doctype, name, item_code):
 			}
 			return data
 
-@frappe.whitelist()
-def get_supplier_details(supplier):
-	website = frappe.db.get_value("Supplier", supplier, "website")
-	if website:
-		return website
