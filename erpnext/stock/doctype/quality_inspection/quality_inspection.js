@@ -78,16 +78,9 @@ frappe.ui.form.on("Quality Inspection", {
 	check_compliance_item: function (frm) {
 		frappe.db.get_value("Compliance Item", { "item_code": frm.doc.item_code }, "item_code")
 			.then(item => {
-				if (item.message) {
-					frm.toggle_reqd('batch_no', true);
-					frm.toggle_display('thc', true);
-					frm.toggle_display('cbd', true);
-				}
-				else {
-					frm.toggle_reqd('batch_no', false);
-					frm.toggle_display('thc', false);
-					frm.toggle_display('cbd', false);
-				}
+				frm.toggle_reqd('batch_no', !!item.message);
+				frm.toggle_display('thc', !!item.message);
+				frm.toggle_display('cbd', !!item.message);
 			})
 	}
 })
