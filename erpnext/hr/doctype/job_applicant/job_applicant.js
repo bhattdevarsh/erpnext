@@ -13,9 +13,9 @@ frappe.ui.form.on("Job Applicant", {
 				frappe.new_doc("Employee", {
 					'first_name': frm.doc.first_name,
 					'last_name': frm.doc.last_name
-				})
+				});
 			}
-		}
+		};
 	},
 	refresh: function (frm) {
 		if (!frm.doc.__islocal) {
