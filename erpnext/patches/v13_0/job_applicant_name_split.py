@@ -2,7 +2,7 @@ import frappe
 
 
 def execute():
-	applicant_list = frappe.get_all("Job Applicant",fields=["name", "applicant_name", ])
+	applicant_list = frappe.get_all("Job Applicant",fields=["name", "applicant_name"])
 	for applicant in applicant_list:
 		splitted_name = applicant.applicant_name.split(" ")
 		frappe.db.set_value("Job Applicant", applicant.name, {
