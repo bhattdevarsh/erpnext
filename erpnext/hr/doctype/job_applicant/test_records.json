@@ -1,9 +1,9 @@
 [
-    {
-        "frst_name": "_Test1",
-        "last_name": "Applicant1",
-        "applicant_name": "_Test1 Applicant1",
-        "email_id": "test_applicant1@example.com",
-        "status": "Open"
-    }
+	{
+		"frst_name": "_Test1",
+		"last_name": "Applicant1",
+		"applicant_name": "_Test1 Applicant1",
+		"email_id": "test_applicant1@example.com",
+		"status": "Open"
+	}
 ]
