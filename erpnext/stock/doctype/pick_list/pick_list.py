@@ -64,6 +64,15 @@ class PickList(Document):
 					frappe.throw(_("Row #{0}: {1}'s quantity ({2}) should be less than or equal to the ordered quantity ({3})").format(
 						item.idx, frappe.bold(item.item_name), frappe.bold(item.qty), frappe.bold(ordered_item_qty)))
 
+				if item.source_package_tag:
+					package_tag_qty = get_package_tag_qty(item.source_package_tag)
+					if not package_tag_qty:
+						frappe.throw("Row #{0}: No record found for Package Tag {1} in Stock Ledger Entry ").format(
+							item.idx, frappe.bold(item.source_package_tag))
+					if item.qty > package_tag_qty[0].qty:
+						frappe.throw(_("Row #{0}: {1}'s quantity ({2}) should not exceed Package Tag {3}'s quantity ({4})").format(
+							item.idx, frappe.bold(item.item_name), frappe.bold(item.qty), frappe.bold(item.source_package_tag), frappe.bold(package_tag_qty[0].qty)))
+
 	def on_submit(self):
 		self.update_order_package_tag()
 		self.update_package_tag()
@@ -398,7 +407,7 @@ def create_delivery_note(source_name, target_doc=None):
 		coa_batch = None
 		if location.source_package_tag:
 			coa_batch = frappe.db.get_value("Package Tag", location.source_package_tag, "coa_batch_no")
-			
+
 		if dn_item:
 			dn_item.warehouse = location.warehouse
 			dn_item.qty = location.picked_qty
