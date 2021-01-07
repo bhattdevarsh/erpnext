@@ -405,3 +405,28 @@ def create_expense_claim(user, expense_date, expense_claim_type, description, am
 			}
 		]
 	}).insert(ignore_permissions=True, ignore_mandatory=True)
+
+
+@frappe.whitelist()
+def list_expense_claim(user):
+	"""
+	API endpoint to get all Expense Claim list and its child table
+
+	User email id args required to list existing data created by that perticular user (Request From Driver App).
+	"""
+
+	employee = frappe.get_value("Employee", {"company_email": user}, "employee_name" )
+	if not employee:
+		return "Employee's E-mail ID Not Found, Please Add 'Company Email' Under 'Employee' Document"
+
+	claim_list = frappe.get_list("Expense Claim", filters={"title": employee})
+
+	expense_claim = []
+
+	if not claim_list:
+		return "No Claim Found For "+ employee
+
+	for claim in claim_list:
+		expense_claim.append(frappe.get_doc("Expense Claim", claim))
+
+	return expense_claim
